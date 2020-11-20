@@ -34,7 +34,8 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.sun.jersey.core.util.Base64;
+//import com.sun.jersey.core.util.Base64;
+import java.util.Base64;
 public class PasswordUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(PasswordUtils.class);
@@ -50,6 +51,7 @@ public class PasswordUtils {
     public static final String PBE_SHA512_AES_128 = "PBEWITHHMACSHA512ANDAES_128";
 
     public static final String DEFAULT_CRYPT_ALGO = "PBEWithMD5AndDES";
+    //public static final String DEFAULT_CRYPT_ALGO = "DES";
     public static final String DEFAULT_ENCRYPT_KEY = "tzL1AKl5uc4NKYaoQ4P3WLGIBFPXWPWdu1fRm9004jtQiV";
     public static final String DEFAULT_SALT = "f77aLYLo";
     public static final int DEFAULT_ITERATION_COUNT = 17;
@@ -78,7 +80,7 @@ public class PasswordUtils {
             SecretKey key = skf.generateSecret(keySpec);
             engine.init(Cipher.ENCRYPT_MODE, key, new PBEParameterSpec(salt, iterationCount, new IvParameterSpec(iv)));
             byte[] encryptedStr = engine.doFinal(strToEncrypt.getBytes());
-            ret = new String(Base64.encode(encryptedStr));
+            ret = new String(Base64.getUrlEncoder().encode(encryptedStr));
         }
         catch(Throwable t) {
             LOG.error("Unable to encrypt password due to error", t);
@@ -101,7 +103,7 @@ public class PasswordUtils {
 			SALT = crypt_algo_array[index++].getBytes(); // 2
 			iterationCount = Integer.parseInt(crypt_algo_array[index++]);// 3
 			if (needsIv(cryptAlgo)) {
-				iv = Base64.decode(crypt_algo_array[index++]);
+				iv = Base64.getUrlDecoder().decode(crypt_algo_array[index++]);
 			} else {
 				iv = DEFAULT_INITIAL_VECTOR;
 			}
@@ -140,8 +142,9 @@ public class PasswordUtils {
 
     private String decrypt() throws IOException {
         String ret = null;
+	LOG.info("Password # " + password + ", length # " + password.length());
         try {
-            byte[] decodedPassword = Base64.decode(password);
+            byte[] decodedPassword = Base64.getUrlDecoder().decode(password);
             Cipher engine = Cipher.getInstance(cryptAlgo);
             PBEKeySpec keySpec = new PBEKeySpec(encryptKey);
             SecretKeyFactory skf = SecretKeyFactory.getInstance(cryptAlgo);
@@ -184,8 +187,10 @@ public class PasswordUtils {
 
 	private static String generateBase64EncodedIV() throws NoSuchAlgorithmException {
 		byte[] iv = new byte[16];
-		SecureRandom.getInstanceStrong().nextBytes(iv);
-		return new String(Base64.encode(iv));
+		//SecureRandom.getInstanceStrong().nextBytes(iv);
+		//SecureRandom.getInstance("SHA1PRNG").nextBytes(iv);
+		SecureRandom.getInstance("NativePRNGNonBlocking").nextBytes(iv);
+		return new String(Base64.getUrlEncoder().encode(iv));
 	}
 
 	public String getCryptAlgo() {
@@ -213,7 +218,7 @@ public class PasswordUtils {
 	}
 
 	public String getIvAsString() {
-		return new String(Base64.encode(getIv()));
+		return new String(Base64.getUrlEncoder().encode(getIv()));
 	}
 	public static String getDecryptPassword(String password) {
 		String decryptedPwd = null;

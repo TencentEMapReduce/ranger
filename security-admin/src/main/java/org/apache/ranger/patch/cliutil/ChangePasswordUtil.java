@@ -20,7 +20,7 @@ package org.apache.ranger.patch.cliutil;
 
 import org.apache.log4j.Logger;
 import org.apache.ranger.biz.UserMgr;
-import org.apache.ranger.common.MessageEnums;
+//import org.apache.ranger.common.MessageEnums;
 import org.apache.ranger.common.RESTErrorUtil;
 import org.apache.ranger.db.RangerDaoManager;
 import org.apache.ranger.entity.XXPortalUser;
@@ -227,15 +227,15 @@ public class ChangePasswordUtil extends BaseLoader {
 						"validatePassword(). Password should be minimum 8 characters with minimum one alphabet and one numeric.");
 				System.out.println(
 						"validatePassword(). Password should be minimum 8 characters with minimum one alphabet and one numeric.");
-				throw restErrorUtil.createRESTException("serverMsg.changePasswordValidatePassword",
-						MessageEnums.INVALID_PASSWORD, null,
-						"Password should be minimum 8 characters with minimum one alphabet and one numeric", null);
+//				throw restErrorUtil.createRESTException("serverMsg.changePasswordValidatePassword",
+//						MessageEnums.INVALID_PASSWORD, null,
+//						"Password should be minimum 8 characters with minimum one alphabet and one numeric", null);
 			}
 		} else {
 			logger.error("validatePassword(). Password cannot be blank/null.");
 			System.out.println("validatePassword(). Password cannot be blank/null.");
-			throw restErrorUtil.createRESTException("serverMsg.changePasswordValidatePassword",
-					MessageEnums.INVALID_PASSWORD, null, "Password cannot be blank/null", null);
+//			throw restErrorUtil.createRESTException("serverMsg.changePasswordValidatePassword",
+//					MessageEnums.INVALID_PASSWORD, null, "Password cannot be blank/null", null);
 		}
 	}
 
