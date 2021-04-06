@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <echo file="/Users/xiongxunde/code/sourceCode/ranger/ranger-1.2.0.tencent/target/version" message="1.2.0"/>
+</target>
+</project>
